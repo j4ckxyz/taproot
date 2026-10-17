@@ -1,0 +1,16 @@
+services:
+  taproot:
+    image: ghcr.io/j4ckxyz/taproot:latest
+    # To build from source instead, comment out `image` above and uncomment:
+    # build: .
+    restart: unless-stopped
+    ports:
+      - "8787:8787"
+    volumes:
+      - taproot-data:/data
+    env_file:
+      - path: .env
+        required: false
+
+volumes:
+  taproot-data:

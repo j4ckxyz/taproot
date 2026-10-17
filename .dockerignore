@@ -1,0 +1,11 @@
+node_modules
+dist
+data
+.git
+.env
+.github
+docs
+.claude
+tests
+*.md
+!README.md

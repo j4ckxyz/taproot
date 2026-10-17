@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" />
+    <title>Taproot</title>
+    <script>
+      // Apply the saved theme before first paint to avoid a flash.
+      try {
+        var t = (localStorage.getItem('taproot-theme') || localStorage.getItem('cascade-theme'));
+        var dark = t === 'dark' || ((!t || t === 'system') && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', dark);
+        var p = JSON.parse(localStorage.getItem('taproot-prefs') || localStorage.getItem('cascade-prefs') || '{}');
+        var A = { indigo: ['#4f46e5', '#818cf8'], blue: ['#2563eb', '#60a5fa'], violet: ['#7c3aed', '#a78bfa'], teal: ['#0d9488', '#2dd4bf'], green: ['#16a34a', '#4ade80'], orange: ['#ea580c', '#fb923c'], pink: ['#db2777', '#f472b6'], graphite: ['#3f3f46', '#d4d4d8'] }[p.accent];
+        if (A) {
+          document.documentElement.style.setProperty('--accent-l', A[0]);
+          document.documentElement.style.setProperty('--accent-d', A[1]);
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

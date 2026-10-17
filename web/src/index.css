@@ -1,0 +1,229 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter Variable', Inter, ui-sans-serif, system-ui, sans-serif;
+
+  --color-paper: var(--paper);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+}
+
+:root {
+  --paper: #f6f7f9;
+  --panel: #ffffff;
+  --ink: #18181b;
+  --muted: #71717a;
+  --line: #e4e4e7;
+  --accent: var(--accent-l, #4f46e5);
+  --accent-soft: color-mix(in srgb, var(--accent) 10%, var(--panel));
+  --warn: #d97706;
+  --danger: #dc2626;
+}
+
+.dark {
+  --paper: #111214;
+  --panel: #1a1b1e;
+  --ink: #ececef;
+  --muted: #a1a1aa;
+  --line: #2a2b30;
+  --accent: var(--accent-d, #818cf8);
+  --accent-soft: color-mix(in srgb, var(--accent) 16%, var(--panel));
+  --warn: #fbbf24;
+  --danger: #f87171;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-feature-settings: 'cv11', 'ss01';
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Faint dot grid behind the canvas. */
+.paper-dots {
+  background-color: var(--paper);
+  background-image: radial-gradient(color-mix(in srgb, var(--muted) 18%, transparent) 1px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+.paper-grid {
+  --grid-line: color-mix(in srgb, var(--muted) 12%, transparent);
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+}
+.paper-plain {
+  background-color: var(--paper);
+}
+
+/* How checked-off nodes look (Settings → Preferences). */
+[data-done='fade'] .node.is-done,
+[data-done='faint'] .node.is-done {
+  opacity: 0.32;
+}
+[data-done='solid'] .node.is-done {
+  opacity: 0.85;
+}
+[data-done='fade'] .node.is-done .title {
+  text-decoration: line-through;
+}
+
+.island {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 0.04),
+    0 8px 24px -6px rgb(15 23 42 / 0.1);
+}
+.dark .island {
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.3),
+    0 8px 28px -6px rgb(0 0 0 / 0.5);
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+}
+.dark .card {
+  box-shadow: none;
+}
+
+/* Canvas nodes. No CSS transitions inside the canvas SVG: any animated property there
+   repaints the whole drawing every frame. Motion lives in small overlay layers instead. */
+[data-done='fade'] .node.is-done:hover,
+[data-done='faint'] .node.is-done:hover {
+  opacity: 0.6;
+}
+
+.done-burst {
+  will-change: transform;
+  transform-origin: center;
+}
+.done-ring {
+  animation: done-ring 480ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+  transform-origin: center;
+}
+/* Starts fully drawn (the tick is there on the first frame) and settles from a slight overshoot. */
+.done-badge {
+  animation: done-badge 220ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+  transform-origin: center;
+}
+@keyframes done-ring {
+  from { transform: scale(1); opacity: 0.9; }
+  to { transform: scale(2.6); opacity: 0; }
+}
+@keyframes done-badge {
+  from { transform: scale(1.4); }
+  to { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .done-burst {
+    display: none;
+  }
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+  opacity: 0.6;
+}
+.dark input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.toast-enter {
+  animation: toast-enter 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+@keyframes toast-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast-enter {
+    animation: none;
+  }
+}
+
+.sheet-enter {
+  animation: sheet-fade 140ms ease-out;
+}
+.sheet-enter > div {
+  animation: sheet-rise 200ms cubic-bezier(0.2, 0.8, 0.3, 1.15);
+}
+@keyframes sheet-fade {
+  from { opacity: 0; }
+}
+@keyframes sheet-rise {
+  from { transform: translateY(8px) scale(0.98); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet-enter,
+  .sheet-enter > div {
+    animation: none;
+  }
+}
+
+/* A soft wash of the accent colour behind landing-style pages. */
+.hero-glow {
+  background-image:
+    radial-gradient(60rem 30rem at 50% -10%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%),
+    radial-gradient(color-mix(in srgb, var(--muted) 18%, transparent) 1px, transparent 1.2px);
+  background-size: auto, 24px 24px;
+}
+
+.menu-enter {
+  animation: menu-pop 120ms cubic-bezier(0.2, 0.8, 0.3, 1.2);
+  transform-origin: top left;
+}
+@keyframes menu-pop {
+  from { opacity: 0; transform: scale(0.96); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-enter {
+    animation: none;
+  }
+}
+
+/* Presence: other people's and agents' cursors glide between cards. */
+.presence-cursor {
+  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.25, 1.08);
+}
+.change-pulse {
+  animation: change-pulse 1500ms ease-out forwards;
+}
+@keyframes change-pulse {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .presence-cursor {
+    transition: none;
+  }
+  .change-pulse {
+    animation-duration: 1ms;
+  }
+}
