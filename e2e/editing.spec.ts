@@ -5,6 +5,7 @@ test.beforeEach(async ({ page }) => signIn(page));
 
 test('a new project needs only a name and opens ready to type the first step', async ({ page }) => {
   await page.goto('/');
+  await page.getByRole('heading', { level: 1 }).waitFor();
   await page.keyboard.press('n');
   await expect(page.getByLabel('Project name')).toBeFocused();
   await page.keyboard.type('Plant a garden');
