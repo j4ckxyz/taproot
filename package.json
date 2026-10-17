@@ -20,7 +20,8 @@
     "restore": "node dist/server/cli.js restore",
     "create-user": "node dist/server/cli.js create-user",
     "update": "sh scripts/update.sh",
-    "seed:demo": "node scripts/seed-demo.mjs"
+    "seed:demo": "node scripts/seed-demo.mjs",
+    "test:e2e": "npm run build && playwright test"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",
@@ -32,6 +33,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",

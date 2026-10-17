@@ -43,6 +43,21 @@ interface PrefsState {
 let saveTimer: number | undefined;
 let pending: Partial<Preferences> = {};
 
+// A change made just before the tab closes still gets saved.
+if (typeof window !== 'undefined') {
+  window.addEventListener('pagehide', () => {
+    if (!Object.keys(pending).length) return;
+    window.clearTimeout(saveTimer);
+    fetch('/api/v1/me', {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json', 'x-taproot-client': '1' },
+      body: JSON.stringify({ prefs: pending }),
+      keepalive: true,
+    }).catch(() => {});
+    pending = {};
+  });
+}
+
 function save(patch: Partial<Preferences>) {
   pending = { ...pending, ...patch };
   window.clearTimeout(saveTimer);

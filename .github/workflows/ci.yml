@@ -25,3 +25,21 @@ jobs:
           curl -sf http://localhost:8788/healthz | grep -q '"ok":true'
           curl -sf http://localhost:8788/api/openapi.json > /dev/null
           curl -sf http://localhost:8788/ | grep -q '<div id="root">'
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7

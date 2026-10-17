@@ -205,7 +205,8 @@ See `.env.example`. Every setting is optional.
 ```sh
 npm ci
 npm run dev             # API on :8787, Vite with hot reload on :5173
-npm test
+npm test                # unit tests
+npm run test:e2e        # browser tests (uses your installed Chrome)
 npm run typecheck
 ```
 
